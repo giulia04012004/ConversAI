@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConversAI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- ============================== SIDEBAR (solo progetti) ============================== -->
+    <aside class="sidebar">
+
+      <div class="sidebar-top">
+        <h1>ConversAI</h1>
+        <button type="button" class="sidebar-toggle-button" title="Chiudi sidebar">&#x2039;</button>
+      </div>
+
+      <section class="projects-section">
+
+        <div class="section-header">
+          <h2>Progetti</h2>
+          <button type="button" class="new-project-button" title="Nuovo progetto">+</button>
+        </div>
+
+        <form class="project-form" hidden>
+          <input
+            type="text"
+            class="project-name-input"
+            name="name"
+            placeholder="Nome progetto"
+            required
+          >
+          <input
+            type="text"
+            class="project-description-input"
+            name="description"
+            placeholder="Descrizione (opzionale)"
+          >
+          <button type="submit">Crea progetto</button>
+        </form>
+        <p class="project-form-status status-message"></p>
+
+        <ul class="project-list"></ul>
+
+        <!-- Ricerca -->
+        <div class="search-section">
+          <div class="section-header">
+            <h2>Ricerca</h2>
+          </div>
+          <form class="search-form">
+            <input
+              type="text"
+              class="search-input"
+              name="q"
+              placeholder="Cerca progetti e conversazioni"
+            >
+            <button type="submit">Cerca</button>
+          </form>
+          <p class="search-status status-message"></p>
+          <ul class="search-results"></ul>
+        </div>
+
+      </section>
+    </aside>
+
+    <!-- ============================ AREA PRINCIPALE ============================ -->
+    <main class="conversation-main">
+
+      <!-- Stato 1: nessun progetto selezionato -->
+      <div class="no-conversation-message">
+        <div class="empty-state-icon">&#x1F4AC;</div>
+        <h2 class="empty-state-title">Benvenuto in ConversAI</h2>
+        <p class="empty-state-text">
+          Seleziona un progetto dalla sidebar, oppure creane uno nuovo,
+          per vedere le conversazioni.
+        </p>
+      </div>
+
+      <!-- Stato 2: progetto aperto — lista conversazioni -->
+      <div class="project-view" hidden>
+
+        <header class="project-view-header">
+          <h2 class="project-view-title"></h2>
+          <button type="button" class="new-conversation-button">+ Nuova conversazione</button>
+        </header>
+
+        <div class="conversation-filters" hidden>
+          <button type="button" class="filter-pill filter-pill-all is-active">Tutte</button>
+          <button type="button" class="filter-pill filter-pill-favorites">&#x2605; Preferite</button>
+          <button type="button" class="filter-pill filter-pill-archived">Archiviate</button>
+        </div>
+
+        <form class="conversation-form" hidden>
+          <input
+            type="text"
+            class="conversation-topic-input"
+            name="topic"
+            placeholder="Topic della conversazione"
+            required
+          >
+          <button type="submit">Crea conversazione</button>
+        </form>
+        <p class="conversation-form-status status-message"></p>
+
+        <ul class="conversation-list"></ul>
+
+      </div>
+
+      <!-- Stato 3: conversazione aperta (chat) -->
+      <div class="conversation-view" hidden>
+
+        <header class="conversation-header">
+          <div class="conversation-header-left">
+            <button type="button" class="back-to-project-button" title="Torna alle conversazioni">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+            </button>
+            <h2 class="conversation-topic"></h2>
+          </div>
+          <div class="conversation-actions">
+            <button type="button" class="toggle-favorite-button">&#x2606; Aggiungi ai preferiti</button>
+            <button type="button" class="toggle-archive-button">Archivia</button>
+            <button type="button" class="delete-conversation-button">Elimina</button>
+          </div>
+        </header>
+
+        <section class="messages-section">
+          <ul class="message-list"></ul>
+        </section>
+
+        <form class="message-form">
+          <textarea
+            class="message-input"
+            name="content"
+            rows="3"
+            placeholder="Scrivi un messaggio..."
+            required
+          ></textarea>
+          <button type="submit">Invia</button>
+        </form>
+        <p class="message-form-status status-message"></p>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="client.js" defer></script>
+</body>
+</html>

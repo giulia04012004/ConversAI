@@ -1,0 +1,13 @@
+{
+  "name": "conversai",
+  "version": "1.0.0",
+  "description": "ConversAI - applicazione web full-stack per la gestione di conversazioni con un assistente simulato (Progetto Applicazioni Web 2025/26)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "sqlite3": "^5.1.7"
+  }
+}
