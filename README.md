@@ -99,10 +99,8 @@ Tutte le risposte sono in formato JSON. Riepilogo sintetico (la documentazione c
 
 ## Screenshot
 
-<!-- Inserire qui uno o più screenshot dell'applicazione in uso, ad esempio:
-![Vista progetto con conversazioni](docs/screenshot-progetto.png)
-![Conversazione aperta](docs/screenshot-chat.png)
--->
+<img width="1915" height="962" alt="image" src="https://github.com/user-attachments/assets/9cb77c0b-4a4e-416e-800f-0e1f33aa6437" />
+
 
 ## Note
 
