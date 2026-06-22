@@ -32,16 +32,18 @@ npm -v
 
 1. Clona la repository e spostati nella cartella del progetto:
 
+   ```bash
    bash
    git clone <url-della-repository>
    cd conversai
-   
+   ```
 
-2. Installa le dipendenze:
+3. Installa le dipendenze:
 
+    ```bash
    bash
    npm install
-   
+   ```
 
    Verranno installati 'express' e 'sqlite3' come dichiarato in 'package.json'.
 
