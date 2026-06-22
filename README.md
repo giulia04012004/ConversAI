@@ -5,8 +5,6 @@ Progetto del corso di **Applicazioni Web — A.A. 2025/26**.
 
 **Studentessa:** Giulia Anedda — Matricola 169298
 
----
-
 ## Cos'è ConversAI
 
 ConversAI offre un'interfaccia in stile chat con assistenti LLM: una sidebar permette di creare e selezionare **progetti**, ogni progetto può contenere più **conversazioni** dedicate a un topic, e ogni conversazione contiene una sequenza di **messaggi** scambiati tra l'utente e un assistente simulato lato server (nessuna integrazione con servizi esterni o modelli linguistici reali).
