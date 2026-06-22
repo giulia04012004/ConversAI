@@ -3,7 +3,7 @@
 Applicazione web full-stack per la gestione di conversazioni testuali con un assistente simulato.
 Progetto del corso di **Applicazioni Web — A.A. 2025/26**.
 
-**Autrice:** Giulia Anedda — Matricola 169298
+**Studentessa:** Giulia Anedda — Matricola 169298
 
 ---
 
