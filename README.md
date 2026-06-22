@@ -99,7 +99,7 @@ Tutte le risposte sono in formato JSON. Riepilogo sintetico (la documentazione c
 
 ## Screenshot
 
-<img width="1915" height="962" alt="image" src="https://github.com/user-attachments/assets/9cb77c0b-4a4e-416e-800f-0e1f33aa6437" />
+<img width="1900" height="962" alt="image" src="https://github.com/user-attachments/assets/9cb77c0b-4a4e-416e-800f-0e1f33aa6437" />
 
 Interfaccia desktop con sidebar dei progetti, area chat e ricerca integrata. La bolla viola identifica i messaggi dell'utente, quella bianca le risposte dell'assistente simulato.
 
