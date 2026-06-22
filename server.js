@@ -10,27 +10,12 @@ const port = 3000
 app.use(express.json())
 app.use(express.static("public"))
 
-// ---------------------------------------------------------------------------
-// Simulazione della risposta dell'assistente (requisito 4.4)
-// Nessuna integrazione esterna: la risposta viene costruita lato server
-// scegliendo, in base a poche parole chiave nel prompt, uno tra alcuni
-// template predefiniti che includono il testo del prompt e il topic della
-// conversazione - non è quindi una risposta fissa.
-//
-// Nota: il controllo delle parole chiave è case-sensitive (cerca "spiega",
-// non "Spiega") e usa solo test() su un'espressione regolare, come
-// nell'esempio di validazione email della Lezione 21. Niente Math.random()
-// (non citato nei PDF): a parità di parole chiave vince sempre la prima
-// regola che corrisponde, così il comportamento è anche facile da spiegare
-// a voce.
-// ---------------------------------------------------------------------------
-
 function simulateAssistantResponse(prompt, topic) {
   const trimmedPrompt = prompt.trim()
 
   // Saluti
   if (/ciao|Ciao|buongiorno|Buongiorno|buonasera|Buonasera|salve|Salve/.test(trimmedPrompt)) {
-    return `Ciao! Come posso aiutarti oggi con l'argomento "${topic}"?`
+    return `Ciao! Come posso aiutarti oggi ?`
   }
 
   // Ringraziamenti
