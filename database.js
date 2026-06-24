@@ -5,9 +5,7 @@
 const sqlite3 = require("sqlite3").verbose()
 const database = new sqlite3.Database("data/app.sqlite")
 
-// ---------------------------------------------------------------------------
-// Creazione delle tabelle (se non esistono già)
-// ---------------------------------------------------------------------------
+// Creazione delle tabelle
 
 database.run(`
   CREATE TABLE IF NOT EXISTS projects (
@@ -41,9 +39,8 @@ database.run(`
   )
 `)
 
-// ---------------------------------------------------------------------------
+
 // Funzioni di mappatura: riga del database -> oggetto usato dalle API
-// ---------------------------------------------------------------------------
 
 function mapProject(row) {
   return {
@@ -77,9 +74,7 @@ function mapMessage(row) {
   }
 }
 
-// ---------------------------------------------------------------------------
 // Projects
-// ---------------------------------------------------------------------------
 
 function getAllProjects(callback) {
   database.all(
@@ -126,17 +121,6 @@ function createProject(name, description, callback) {
   )
 }
 
-// new Date() crea un oggetto che rappresenta l'istante corrente (data e ora
-// del momento in cui il codice viene eseguito). .toISOString() lo converte
-// in una stringa di testo in formato standard ISO 8601, ad esempio
-// "2026-06-21T14:32:08.123Z" - anno-mese-giorno, poi T, poi ora:minuti:secondi
-// in UTC (fuso orario universale), chiusa da Z.
-
-// Per sapere se il progetto esiste prima di aggiornarlo/eliminarlo uso
-// sempre getProjectById come controllo preliminare (stesso pattern di
-// ricerca con .get() visto a Lezione 24), invece di leggere this.changes
-// dopo la query: this.changes non è mai citato nei PDF, solo this.lastID lo è.
-
 function updateProject(projectId, fields, callback) {
   const now = new Date().toISOString()
 
@@ -161,8 +145,7 @@ function updateProject(projectId, fields, callback) {
   })
 }
 
-// Elimina tutti i messaggi di una conversazione (passo preliminare prima
-// di eliminare la conversazione stessa).
+// Elimina tutti i messaggi di una conversazione
 function deleteMessagesByConversation(conversationId, callback) {
   database.run(
     "DELETE FROM messages WHERE conversation_id = ?",
@@ -173,14 +156,8 @@ function deleteMessagesByConversation(conversationId, callback) {
   )
 }
 
-// Elimina i messaggi di ogni conversazione passata in conversationList, poi
-// elimina tutte quelle conversazioni con un'unica DELETE sul progetto.
-// Uso un ciclo for...of (Lezione 19, sez. 4 e 6, stessa sintassi già usata
-// in searchEverything più sotto) invece della ricorsione: dato che le
-// conversazioni sono indipendenti tra loro, l'ordine in cui i loro messaggi
-// vengono eliminati non conta - l'unico ordine che conta davvero è "prima
-// tutti i messaggi, poi le conversazioni, poi il progetto", che qui resta
-// rispettato.
+// Elimina i messaggi di ogni conversazione passata in conversationList, poi elimina tutte quelle conversazioni con un'unica DELETE sul progetto.
+
 function deleteConversationsAndMessages(projectId, conversationList, callback) {
   let pendingDeletions = conversationList.length
   let hasFailed = false
@@ -207,8 +184,7 @@ function deleteConversationsAndMessages(projectId, conversationList, callback) {
   }
 }
 
-// Elimina in un solo colpo tutte le conversazioni di un progetto (i loro
-// messaggi sono già stati rimossi da deleteConversationsAndMessages).
+// Elimina in un solo colpo tutte le conversazioni di un progetto (i messaggi sono già stati rimossi da deleteConversationsAndMessages).
 function deleteAllProjectConversations(projectId, callback) {
   database.run(
     "DELETE FROM conversations WHERE project_id = ?",
@@ -228,9 +204,7 @@ function deleteProject(projectId, callback) {
       return callback(null, false)
     }
 
-    // Prima recupero tutte le conversazioni del progetto (comprese quelle
-    // archiviate), poi elimino in cascata conversazioni e messaggi, e solo
-    // alla fine il progetto stesso.
+    // Prima recupero tutte le conversazioni del progetto, poi elimino in cascata conversazioni, messaggi e progetto
     getConversationsByProject(projectId, { favoritesOnly: false, includeArchived: true }, (conversationsError, projectConversations) => {
       if (conversationsError) {
         return callback(conversationsError)
@@ -255,9 +229,8 @@ function deleteProject(projectId, callback) {
     })
   })
 }
-// ---------------------------------------------------------------------------
+
 // Conversations
-// ---------------------------------------------------------------------------
 
 function getConversationsByProject(projectId, filters, callback) {
   let sql = `
@@ -359,9 +332,7 @@ function deleteConversation(conversationId, callback) {
       return callback(null, false)
     }
 
-    // Prima elimino i messaggi della conversazione (stessa funzione già
-    // usata da deleteProject), poi la conversazione stessa - altrimenti i
-    // messaggi resterebbero orfani nella tabella messages.
+    // Prima elimino i messaggi della conversazione poi la conversazione stessa
     deleteMessagesByConversation(conversationId, messagesError => {
       if (messagesError) {
         return callback(messagesError)
@@ -381,8 +352,7 @@ function deleteConversation(conversationId, callback) {
   })
 }
 
-// Versione senza filtri, usata solo dalla ricerca (sez. successiva): legge
-// tutte le conversazioni di tutti i progetti con una singola SELECT di base.
+
 function getAllConversationsRaw(callback) {
   database.all(
     "SELECT id, project_id, topic, is_favorite, is_archived, created_at, updated_at FROM conversations",
@@ -395,9 +365,8 @@ function getAllConversationsRaw(callback) {
   )
 }
 
-// ---------------------------------------------------------------------------
+
 // Messages
-// ---------------------------------------------------------------------------
 
 function getMessagesByConversation(conversationId, callback) {
   database.all(
@@ -443,8 +412,7 @@ function touchConversation(conversationId, callback) {
   )
 }
 
-// Versione senza filtri, usata solo dalla ricerca: legge tutti i messaggi
-// di tutte le conversazioni con una singola SELECT di base.
+
 function getAllMessagesRaw(callback) {
   database.all(
     "SELECT id, conversation_id, role, content, created_at FROM messages",
@@ -457,21 +425,8 @@ function getAllMessagesRaw(callback) {
   )
 }
 
-// ---------------------------------------------------------------------------
-// Search (funzionalità extra 4.5 - ricerca nello storico)
-//
-// I tuoi PDF mostrano solo SELECT/INSERT/UPDATE/DELETE su una singola
-// tabella (Lezione 24): niente JOIN, niente LIKE. Per restare dentro questi
-// limiti, la ricerca funziona così:
-//   1) si leggono TUTTE le righe delle tre tabelle con tre SELECT separate
-//      (nessun JOIN: il collegamento fra le tabelle si fa "a mano" in
-//      JavaScript con find(), come tasks.find() nella Lezione 23)
-//   2) il confronto testuale è case-sensitive e fatto con un ciclo manuale
-//      carattere per carattere (funzione containsSubstring più sotto),
-//      usando solo .length e l'accesso per indice testo[i] - la stessa
-//      sintassi di array[indice] vista nella Lezione 19, qui applicata a
-//      una stringa invece che a un array.
-// ---------------------------------------------------------------------------
+//   1) leggo tutte le righe delle tre tabelle con tre select
+//   2) faccio confronto testuale
 
 function containsSubstring(text, query) {
   if (query.length === 0) {
