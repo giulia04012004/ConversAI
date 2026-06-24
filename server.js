@@ -25,12 +25,12 @@ function simulateAssistantResponse(prompt, topic) {
 
   // Domande
   if (/\?/.test(trimmedPrompt)) {
-    return `Ottima domanda! Riguardo a "${topic}", per rispondere in modo completo al tuo dubbio ("${trimmedPrompt}"), ti farei un paio di esempi concreti per chiarire meglio il concetto.`
+    return `Ottima domanda! Riguardo a "${topic}", per rispondere in modo completo al tuo dubbio ("${trimmedPrompt}"), ti proporrei un esempio pratico che è sempre utile per capire meglio!.`
   }
 
   // Riassunti e sintesi
   if (/riassun|Riassun|sintesi|Sintesi|summary|Summary/.test(trimmedPrompt)) {
-    return `Certo, ti faccio subito una sintesi! In breve, per quanto riguarda "${topic}", il cuore del tuo messaggio è "${trimmedPrompt}".`
+    return 'Certo, ti faccio subito una sintesi! In breve, per quanto riguarda "${topic}", il cuore del tuo messaggio è "${trimmedPrompt}".`
   }
 
   // Spiegazioni
@@ -43,12 +43,10 @@ function simulateAssistantResponse(prompt, topic) {
     return `Un esempio pratico aiuta sempre! Pensando a "${topic}", potremmo immaginare esattamente la situazione che hai descritto: "${trimmedPrompt}".`
   }
 
-  return `Ricevuto! Ho letto il tuo messaggio ("${trimmedPrompt}") in merito a "${topic}", dimmi che aspetto in particolare vorresti approfondire!`
+  return `Ho letto il tuo messaggio ("${trimmedPrompt}") in merito a "${topic}", dimmi che aspetto in particolare vorresti approfondire!`
 }
 
-// ---------------------------------------------------------------------------
 // Projects
-// ---------------------------------------------------------------------------
 
 app.get("/api/projects", (req, res) => {
   database.getAllProjects((error, projects) => {
@@ -132,9 +130,7 @@ app.delete("/api/projects/:projectId", (req, res) => {
   })
 })
 
-// ---------------------------------------------------------------------------
 // Conversations
-// ---------------------------------------------------------------------------
 
 app.get("/api/projects/:projectId/conversations", (req, res) => {
   const projectId = Number(req.params.projectId)
@@ -254,9 +250,7 @@ app.delete("/api/conversations/:conversationId", (req, res) => {
   })
 })
 
-// ---------------------------------------------------------------------------
 // Messages
-// ---------------------------------------------------------------------------
 
 app.get("/api/conversations/:conversationId/messages", (req, res) => {
   const conversationId = Number(req.params.conversationId)
@@ -299,14 +293,14 @@ app.post("/api/conversations/:conversationId/messages", (req, res) => {
       return res.status(404).json({ error: "Conversation not found" })
     }
 
-    // 1) Salva il messaggio dell'utente
+    //Salvo il messaggio dell'utente
     database.createMessage(conversationId, "user", content, (userError, userMessage) => {
       if (userError) {
         console.error(userError)
         return res.status(500).json({ error: "Database error" })
       }
 
-      // 2) Genera e salva la risposta simulata dell'assistente
+      // 2)Genero e salvo la risposta simulata dell'assistente
       const assistantContent = simulateAssistantResponse(content, conversation.topic)
 
       database.createMessage(conversationId, "assistant", assistantContent, (assistantError, assistantMessage) => {
@@ -315,7 +309,7 @@ app.post("/api/conversations/:conversationId/messages", (req, res) => {
           return res.status(500).json({ error: "Database error" })
         }
 
-        // 3) Aggiorna il timestamp della conversazione e risponde con entrambi i messaggi
+        // 3) Aggiorno il timestamp della conversazione e rispondo con entrambi i messaggi
         database.touchConversation(conversationId, () => {
           res.status(201).json({
             userMessage,
@@ -327,9 +321,6 @@ app.post("/api/conversations/:conversationId/messages", (req, res) => {
   })
 })
 
-// ---------------------------------------------------------------------------
-// Search (funzionalità extra 4.5)
-// ---------------------------------------------------------------------------
 
 app.get("/api/search", (req, res) => {
   const query = req.query.q
@@ -346,10 +337,6 @@ app.get("/api/search", (req, res) => {
     res.status(200).json(results)
   })
 })
-
-// ---------------------------------------------------------------------------
-// Fallback per route API non riconosciute
-// ---------------------------------------------------------------------------
 
 app.use("/api", (req, res) => {
   res.status(404).json({ error: "Resource not found" })
