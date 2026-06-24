@@ -2,10 +2,6 @@
 // Logica front-end di ConversAI: comunica con le API REST tramite fetch
 // e aggiorna il DOM senza ricaricare la pagina.
 
-// ---------------------------------------------------------------------------
-// Riferimenti agli elementi del DOM
-// ---------------------------------------------------------------------------
-
 const projectForm = document.querySelector(".project-form")
 const projectNameInput = document.querySelector(".project-name-input")
 const projectDescriptionInput = document.querySelector(".project-description-input")
@@ -47,26 +43,21 @@ const messageSubmitButton = messageForm.querySelector("button[type='submit']")
 const sidebar = document.querySelector(".sidebar")
 const sidebarToggleButton = document.querySelector(".sidebar-toggle-button")
 
-// ---------------------------------------------------------------------------
 // Stato applicativo
-// ---------------------------------------------------------------------------
 
 let projects = []
 let conversations = []
 let currentProject = null
 let currentConversation = null
 
-// Pattern "clicca due volte per confermare" (al posto di window.confirm,
-// mai visto nei PDF del corso).
+//"clicca due volte per confermare" 
 let pendingDeleteConversationId = null
 let pendingDeleteProjectId = null
 
-// Filtro attivo sulla lista conversazioni: "all" | "favorites" | "archived"
+// Filtro attivo sulla lista conversazioni: "all", "favorites", "archived"
 let activeFilter = "all"
 
-// ---------------------------------------------------------------------------
 // Funzioni di supporto
-// ---------------------------------------------------------------------------
 
 function readJsonOrThrow(response) {
   if (response.status === 204) {
@@ -127,10 +118,6 @@ function encodeQueryValue(value) {
   return encoded
 }
 
-// ---------------------------------------------------------------------------
-// Gestione dei tre stati dell'area principale
-// ---------------------------------------------------------------------------
-
 // Mostra lo stato "nessun progetto": area di benvenuto
 function showWelcomeState() {
   noConversationMessage.hidden = false
@@ -154,10 +141,8 @@ function showConversationState() {
   conversationView.hidden = false
 }
 
-// ---------------------------------------------------------------------------
-// Projects
-// ---------------------------------------------------------------------------
 
+// Projects
 function loadProjects() {
   fetch("/api/projects")
     .then(readJsonOrThrow)
@@ -282,17 +267,13 @@ function selectProject(project) {
   loadConversations()
 }
 
-// ---------------------------------------------------------------------------
 // Conversations
-// ---------------------------------------------------------------------------
 
 function loadConversations() {
   if (!currentProject) {
     return
   }
 
-  // Costruisco la query string a mano (solo concatenazione di stringhe e
-  // if, come nelle Lezioni 19/23), invece di usare URLSearchParams.
   let queryString = ""
 
   if (activeFilter === "favorites") {
@@ -465,9 +446,7 @@ function handleDeleteConversation() {
     .catch(error => showStatus(messageFormStatus, error.message, true))
 }
 
-// ---------------------------------------------------------------------------
 // Messages
-// ---------------------------------------------------------------------------
 
 function loadMessages() {
   if (!currentConversation) return
@@ -536,9 +515,7 @@ function handleMessageSubmit(event) {
     })
 }
 
-// ---------------------------------------------------------------------------
-// Search
-// ---------------------------------------------------------------------------
+// Ricerca
 
 function handleSearchSubmit(event) {
   event.preventDefault()
@@ -551,9 +528,6 @@ function handleSearchSubmit(event) {
     return
   }
 
-  // Nota: non chiamo encodeURIComponent() perché non è mai citato nei PDF
-  // del corso. Il browser applica comunque da solo il percent-encoding
-  // (concetto visto a Lezione 4) quando interpreta l'URL passato a fetch.
   fetch(`/api/search?q=${encodeQueryValue(query)}`)
     .then(readJsonOrThrow)
     .then(results => {
@@ -650,9 +624,7 @@ function openSearchResultConversation(result) {
     .catch(error => showStatus(searchStatus, error.message, true))
 }
 
-// ---------------------------------------------------------------------------
 // Sidebar apri/chiudi
-// ---------------------------------------------------------------------------
 
 function handleSidebarToggle() {
   sidebar.classList.toggle("is-collapsed")
@@ -660,9 +632,7 @@ function handleSidebarToggle() {
   sidebarToggleButton.textContent = isCollapsed ? "›" : "‹"
 }
 
-// ---------------------------------------------------------------------------
 // Collegamento degli event listener
-// ---------------------------------------------------------------------------
 
 projectForm.addEventListener("submit", handleProjectSubmit)
 newProjectButton.addEventListener("click", handleNewProjectToggle)
@@ -685,8 +655,6 @@ backToProjectButton.addEventListener("click", function() { showProjectState() })
 searchForm.addEventListener("submit", handleSearchSubmit)
 sidebarToggleButton.addEventListener("click", handleSidebarToggle)
 
-// ---------------------------------------------------------------------------
 // Inizializzazione
-// ---------------------------------------------------------------------------
 
 loadProjects()
