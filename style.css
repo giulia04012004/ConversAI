@@ -1,12 +1,6 @@
-/* style.css — ConversAI
-   Palette B: indaco (#1e1b2e) per la sidebar, avorio (#f6f4ee) per l'area
-   principale, accento viola (#6d28d9 / #8b5cf6) e ambra (#d97706) per i
-   preferiti.
+/* style.css */
 
-   Nota: i colori sono scritti per intero in ogni regola (niente variabili
-   CSS / :root, mai viste nei PDF del corso). */
-
-* {
+{
   box-sizing: border-box;
 }
 
@@ -43,9 +37,7 @@ ul {
   padding: 0;
 }
 
-/* ------------------------------------------------------------------ */
-/* Layout generale                                                     */
-/* ------------------------------------------------------------------ */
+/* Layout generale */
 
 .app-layout {
   display: flex;
@@ -76,9 +68,7 @@ ul {
   overflow-y: auto;
 }
 
-/* ------------------------------------------------------------------ */
-/* Testata sidebar                                                     */
-/* ------------------------------------------------------------------ */
+/* sidebar */
 
 .sidebar-top {
   display: flex;
@@ -110,9 +100,7 @@ ul {
   color: #e7e9ee;
 }
 
-/* ------------------------------------------------------------------ */
-/* Sidebar collassata                                                  */
-/* ------------------------------------------------------------------ */
+/* Sidebar chiusa */
 
 .sidebar.is-collapsed {
   flex: 0 0 2.75rem;
@@ -143,8 +131,7 @@ ul {
     flex-direction: column;
   }
 
-  /* La sidebar diventa una striscia orizzontale in cima; max-height
-     ridotto a 38vh così l'area conversazione riceve almeno il 62% dello schermo. */
+  /* La sidebar diventa una striscia orizzontale in cima */
   .sidebar {
     flex: 0 0 auto;
     max-width: none;
@@ -154,41 +141,32 @@ ul {
     gap: 0.75rem;
   }
 
-  /* La lista progetti non ha più il suo max-height interno:
-     è la sidebar stessa a gestire lo scroll. */
   .project-list {
     max-height: none;
   }
 
-  /* Riduco i risultati di ricerca per non occupare tutta la sidebar. */
   .search-results {
     max-height: 7rem;
   }
 
-  /* Meno padding laterale: su 375px, 2rem lascerebbe solo 311px utili. */
   .conversation-main {
     padding: 1rem;
   }
 
-  /* Le bolle occupano più larghezza su schermi stretti. */
   .message-item {
     max-width: 90%;
   }
 
-  /* I bottoni azione (preferiti, archivia, elimina) più compatti. */
   .conversation-actions button {
     padding: 0.3rem 0.6rem;
     font-size: 0.75rem;
   }
 
-  /* L'intestazione del progetto va in colonna su schermi molto stretti. */
   .project-view-header {
     flex-direction: column;
     align-items: flex-start;
   }
-
-  /* Su mobile la sidebar collassata non è una striscia verticale (2.75rem)
-     ma una barra orizzontale sottile a tutta larghezza. */
+   
   .sidebar.is-collapsed {
     max-width: none;
     width: 100%;
@@ -200,10 +178,6 @@ ul {
   }
 }
 
-/* L'attributo HTML `hidden` ha di base la stessa specificità (0,1,0) di
-   una singola classe (Lezione 18): senza queste regole più specifiche,
-   selettori come ".project-view { display: flex }" vincerebbero comunque
-   e l'elemento resterebbe visibile anche con hidden impostato. */
 .conversation-view[hidden],
 .project-view[hidden],
 .project-form[hidden],
@@ -213,9 +187,7 @@ ul {
   display: none;
 }
 
-/* ------------------------------------------------------------------ */
-/* Intestazione sezioni (titolo + pulsante azione)                    */
-/* ------------------------------------------------------------------ */
+/* Intestazione sezioni */
 
 .section-header {
   display: flex;
@@ -228,7 +200,7 @@ ul {
   margin-bottom: 0;
 }
 
-/* Pulsante "+" per aggiungere un progetto */
+/* Pulsante "+" */
 .new-project-button {
   flex: 0 0 auto;
   width: 1.75rem;
@@ -247,10 +219,6 @@ ul {
   background-color: rgba(255, 255, 255, 0.14);
   color: #e7e9ee;
 }
-
-/* ------------------------------------------------------------------ */
-/* Sidebar — stili generali                                            */
-/* ------------------------------------------------------------------ */
 
 .sidebar h2 {
   font-size: 0.78rem;
@@ -303,7 +271,7 @@ ul {
   color: #f87171;
 }
 
-/* ---- Lista progetti ---- */
+/* Lista progetti */
 
 .project-list {
   margin-top: 0.5rem;
@@ -370,7 +338,7 @@ ul {
   background-color: #991b1b;
 }
 
-/* ---- Ricerca ---- */
+/* Ricerca */
 
 .search-section {
   margin-top: 1rem;
@@ -378,8 +346,6 @@ ul {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* .sidebar form ha specificità (0,1,1); per sovrascrivere flex-direction
-   serve un selettore con specificità più alta: aggiungiamo .sidebar. */
 .sidebar .search-form {
   flex-direction: row;
 }
@@ -430,9 +396,9 @@ ul {
   font-family: "Courier New", monospace;
 }
 
-/* ------------------------------------------------------------------ */
-/* Area principale — stato 1: nessun progetto selezionato             */
-/* ------------------------------------------------------------------ */
+
+/* nessun progetto selezionato  */
+
 
 .no-conversation-message {
   flex: 1;
@@ -469,9 +435,7 @@ ul {
   line-height: 1.5rem;
 }
 
-/* ------------------------------------------------------------------ */
-/* Area principale — stato 2: lista conversazioni del progetto        */
-/* ------------------------------------------------------------------ */
+/* lista conversazioni del progetto */
 
 .project-view {
   display: flex;
@@ -511,8 +475,6 @@ ul {
   color: #ffffff;
 }
 
-/* Form nuova conversazione nel main — usa specificità (0,1,1) che è
-   inferiore a .conversation-form[hidden] (0,2,0), quindi hidden vince sempre. */
 .project-view form {
   display: flex;
   flex-direction: column;
@@ -546,7 +508,7 @@ ul {
   background-color: #7c3aed;
 }
 
-/* ---- Filtri conversazioni — pill button ---- */
+/* Filtri conversazioni */
 
 .conversation-filters {
   display: flex;
@@ -579,7 +541,7 @@ ul {
   font-weight: 600;
 }
 
-/* Lista conversazioni (tema chiaro, nell'area principale) */
+/* Lista conversazioni */
 .conversation-list {
   display: flex;
   flex-direction: column;
@@ -611,15 +573,12 @@ ul {
   font-weight: 600;
 }
 
-/* Voce archiviata: colore attenuato, leggibile su sfondo chiaro */
 .conversation-item.is-archived .conversation-button {
   color: #9ca3af;
   font-style: italic;
 }
 
-/* ------------------------------------------------------------------ */
-/* Area principale — stato 3: conversazione aperta (chat)             */
-/* ------------------------------------------------------------------ */
+/* chat */
 
 .conversation-view {
   display: flex;
@@ -705,7 +664,7 @@ ul {
   background-color: #991b1b;
 }
 
-/* ---- Messaggi ---- */
+/* Messaggi */
 
 .messages-section {
   flex: 1;
@@ -762,8 +721,6 @@ ul {
   border-bottom-left-radius: 0.2rem;
 }
 
-/* ---- Form invio messaggio ---- */
-
 .message-form {
   display: flex;
   gap: 0.6rem;
@@ -796,8 +753,6 @@ ul {
   background-color: #7c3aed;
 }
 
-/* Il :disabled viene dopo :hover così, a parità di specificità,
-   sovrascrive il colore anche quando il bottone è in hover. */
 .message-form button:disabled {
   background-color: #9ca3af;
   cursor: not-allowed;
